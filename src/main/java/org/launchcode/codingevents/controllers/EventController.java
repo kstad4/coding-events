@@ -42,14 +42,27 @@ public class EventController {
 
     @PostMapping("delete")
     public String processDeleteEventForm (@RequestParam(required = false) int[] eventIds) {
-
         if (eventIds != null) {
             for (int id : eventIds) {
                 EventData.remove(id);
             }
             ;
         };
+        return "redirect:/events";
+    };
 
+    @GetMapping("edit/{eventId}")
+    public String displayEditEventForm(Model model, @PathVariable int eventId) {
+        Event eventToEdit = EventData.getById(eventId);
+        model.addAttribute("event", eventToEdit);
+        return "events/edit";
+    };
+
+    @PostMapping("edit")
+    public String processEditForm(int eventId, String name, String description) {
+        Event eventToEdit = EventData.getById(eventId);
+        eventToEdit.setName(name);
+        eventToEdit.setDescription(description);
         return "redirect:/events";
     };
 };
